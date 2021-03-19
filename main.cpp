@@ -46,7 +46,7 @@ bool Run_Auction(WrapperRegDriver * platform) {
     t.set_rfIn_nObjects(10);
 
     t.set_rfIn_start(1);
-    t.set_rfIn_start(1);
+    t.set_rfIn_start(0);
 
     while (t.get_rfOut_finished() != 1);
 
