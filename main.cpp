@@ -6,13 +6,7 @@ using namespace std;
 
 
 bool Run_Auction(WrapperRegDriver * platform) {
-    try {
 	Auction t(platform);
-    } catch (char const * s) {
-        cerr <<"Could not initialize driver, failed with error: " <<s;
-        exit(-1);
-    }
-
 
 	uint8_t rew_mat[160] = {
     7,   51,  52,  87, 38,  60,  74,  66,
@@ -75,8 +69,14 @@ bool Run_Auction(WrapperRegDriver * platform) {
 int main(int argc, char** argv)
 {
     cout <<"Running Auction Test program" <<endl;
+    WrapperRegDriver *platform;
+    try {
+        platform = initPlatform();
+    } catch (const char * s) {
+        cerr <<"initPlatform failed. Got error: " <<s;
+        exit(-1);
+    }
 
-    WrapperRegDriver * platform = initPlatform();
     Run_Auction(platform);
     deinitPlatform(platform);
 
