@@ -6,7 +6,7 @@ using namespace std;
 
 
 bool Run_Auction(WrapperRegDriver * platform) {
-	Auction t(platform);
+	Auction t(platform, false);
 
 	uint8_t rew_mat[160] = {
     7,   51,  52,  87, 38,  60,  74,  66,

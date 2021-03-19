@@ -12,9 +12,11 @@
 using namespace std;
 class Auction {
 public:
-  Auction(WrapperRegDriver * platform) {
+  Auction(WrapperRegDriver * platform, bool load_bitfile) {
     m_platform = platform;
-    attach();
+    if (load_bitfile) {
+      attach();
+    }
     if(readReg(0) != 0x1159cc0f)  {
       throw "Unexpected accelerator signature, is the correct bitfile loaded?";
     }
