@@ -77,7 +77,12 @@ int main(int argc, char** argv)
         exit(-1);
     }
 
-    Run_Auction(platform);
+    try {
+        Run_Auction(platform);
+    } catch (const char * s) {
+        cerr <<"run_Auction failed. Got error: " <<s;
+        exit(-1);
+    }
     deinitPlatform(platform);
 
 
