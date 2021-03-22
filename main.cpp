@@ -60,8 +60,6 @@ bool Run_Auction(WrapperRegDriver * platform) {
 
     platform->deallocAccelBuffer(accelBuf);
     platform->deallocAccelBuffer(accelResBuf);
-    delete [] rew_mat;
-    delete [] res;
 
     return 0;
     }
