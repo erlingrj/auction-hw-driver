@@ -48,11 +48,12 @@ bool Run_Auction(WrapperRegDriver * platform) {
     t.set_rfIn_start(1);
     t.set_rfIn_start(0);
 
-    while (t.get_rfOut_finished() != 1);
+    while (t.get_rfOut_finished() != 1) {
+        cout <<"Cycles=" <<t.get_rfOut_cycleCount() <<endl;
+    }
 
     platform->copyBufferAccelToHost(accelResBuf, res, bufsize_res);
     //
-    cout <<"Cycles=" <<t.get_rfOut_cycleCount() <<endl;
     for (int i = 0; i<20; i++) {
         cout <<"i=" <<i <<" res=" <<res[i] <<endl;
     }
