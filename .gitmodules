@@ -1,0 +1,3 @@
+[submodule "auction-cpp"]
+	path = auction-cpp
+	url = git@github.com:erlingrj/auction-cpp.git
