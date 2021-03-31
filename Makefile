@@ -1,9 +1,10 @@
 CC=g++
-CPPFLAGS=-fpermissive
+CPPFLAGS=-fpermissive -Iauction-cpp
+
 
 
 all:
-	$(CC) $(CPPFLAGS) main.cpp platform-zedboard-linux.cpp
+	$(CC) $(CPPFLAGS) main.cpp platform-zedboard-linux.cpp utils.cpp AuctionSolver.cpp
 
 test:
-	$(CC) $(CPPFLAGS) -g main.cpp platform-zedboard-linux.cpp
+	$(CC) $(CPPFLAGS) -g main.cpp platform-zedboard-linux.cpp utils.cpp AuctionSolver.cpp
