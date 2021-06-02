@@ -1,5 +1,6 @@
 CC=g++
-CPPFLAGS=-fpermissive -Iauction-cpp
+CPPFLAGS=-fpermissive -Iauction-cpp 
+LDFLAGS=--std=c++17 -lstdc++fs
 
 AUCTION_CPP_SRCS= \
 	auction-cpp/utils.cpp \
@@ -11,7 +12,7 @@ SRCS= \
 
 
 all:
-	$(CC) $(CPPFLAGS) ${SRCS} ${AUCTION_CPP_SRCS}
+	$(CC) $(CPPFLAGS) ${SRCS} ${AUCTION_CPP_SRCS} ${LDFLAGS}
 
 test:
-	$(CC) $(CPPFLAGS) -g ${SRCS} ${AUCTION_CPP_SRCS}
+	$(CC) $(CPPFLAGS) -g ${SRCS} ${AUCTION_CPP_SRCS} ${LDFLAGS}
