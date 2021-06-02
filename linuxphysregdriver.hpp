@@ -84,7 +84,7 @@ public:
   }
 
   virtual void deallocAllAccelBuffers() {
-    m_currentAllocBase = (unsigned int) m_memBufBasePhys
+    m_currentAllocBase = (unsigned int) m_memBufBasePhys;
   }
 
   virtual void attach(const char * name) {

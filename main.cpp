@@ -84,9 +84,7 @@ bool run_Auction(WrapperRegDriver * platform, std::vector<std::vector<int>> rewa
   }
 
   cout <<endl;
-  platform->deallocAccelBuffer(accelBuf);
-  platform->deallocAccelBuffer(accelResBuf);
-
+  platform->deallocAllAccelBuffers();
   return valid;
 }
 
@@ -94,21 +92,23 @@ int main(int argc, char** argv)
 {
   cout <<"Running Auction Accelerator" <<endl;
   int epsilon = 1;
+  int n_runs = 0;
   string path = "auction-cpp/resources/test_problems8bit";
   for (const auto & entry : experimental::filesystem::directory_iterator(path)) {
-
     auto p = string(entry.path().string());
 //      if (p == "auction-cpp/resources/test_problems8bit/rewards1828.csv") {
     auto rew = parse_csv(p);
-    cout <<p <<" rows=" <<rew.size() <<" cols=" <<rew[0].size() <<endl;
+    cout <<p <<endl <<" rows=" <<rew.size() <<" cols=" <<rew[0].size() <<endl;
     WrapperRegDriver * platform = initPlatform();
     if (!run_Auction(platform, rew)) {
       return 1;
     }
+    n_runs++;
     deinitPlatform(platform);
 //      }
   }
 
+  cout <<"Solved "<<n_runs<<" problems" <<endl;
   return 0;
 }
 
