@@ -17,6 +17,7 @@ public:
   virtual void copyBufferAccelToHost(void * accelBuffer, void * hostBuffer, unsigned int numBytes) {}
   virtual void * allocAccelBuffer(unsigned int numBytes) { throw "allocAccelBuffer not supported"; }
   virtual void deallocAccelBuffer(void * buffer) {}
+  virtual void deallocAllAccelBuffers() {throw "deallocAllAccelBuffers not implemented";}
   // return CPU-accessible address for a buffer returned from allocAccelBuffer
   // only makes sense for some (shared-memory) platforms
   // facilitates SW that takes advantage of cache coherency

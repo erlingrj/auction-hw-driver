@@ -83,6 +83,10 @@ public:
     // TODO implement a proper dealloc if we have lots of dynamic alloc/delloc
   }
 
+  virtual void deallocAllAccelBuffers() {
+    m_currentAllocBase = (unsigned int) m_memBufBasePhys
+  }
+
   virtual void attach(const char * name) {
     // call loadBitfile, defined in platform*.cpp
     loadBitfile(name);
