@@ -1,4 +1,4 @@
 all:
 {
-	auction.bit
+	auction_sparse.bit
 }
