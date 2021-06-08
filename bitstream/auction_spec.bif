@@ -1,0 +1,4 @@
+all:
+{
+	auction_spec.bit
+}
