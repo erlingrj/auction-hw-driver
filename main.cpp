@@ -27,8 +27,8 @@ bool run_Auction(WrapperRegDriver * platform, std::vector<std::vector<int>> rewa
   auto sw_duration = duration_cast<nanoseconds>(stop-start);
 
 
-  uint8_t rew_mat_aligned[REW_MAT_BUF_SIZE];
-  int size = align_to_rows(reward_mat, (uint8_t *) &rew_mat_aligned);
+  uint64_t rew_mat_aligned[REW_MAT_BUF_SIZE];
+  int size = allocate_reward(reward_mat, (uint64_t *) &rew_mat_aligned);
 
   int n_rows = reward_mat.size();
   int n_cols = reward_mat[0].size();
