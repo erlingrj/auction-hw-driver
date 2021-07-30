@@ -2,6 +2,7 @@ VERSION ?= auction_spec
 
 
 all:
+	echo "all:\n{\n${VERSION}.bit\n}\n" > ${VERSION}.bif
 	bootgen -image ${VERSION}.bif -arch zynq -process_bitstream bin
 
 program:
