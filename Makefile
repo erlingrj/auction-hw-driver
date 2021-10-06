@@ -12,7 +12,7 @@ SRCS= \
 
 
 all:
-	$(CC) $(CPPFLAGS) ${SRCS} ${AUCTION_CPP_SRCS} ${LDFLAGS}
+	$(CC) $(CPPFLAGS) ${SRCS} ${AUCTION_CPP_SRCS} ${LDFLAGS} -o run.x
 
 test:
-	$(CC) $(CPPFLAGS) -g ${SRCS} ${AUCTION_CPP_SRCS} ${LDFLAGS}
+	$(CC) $(CPPFLAGS) -g ${SRCS} ${AUCTION_CPP_SRCS} ${LDFLAGS} -o run.x
