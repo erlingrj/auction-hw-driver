@@ -1,4 +1,5 @@
 all:
 {
-	auction_spec.bit
+auction_spec.bit
 }
+
