@@ -10,29 +10,20 @@ using namespace std::chrono;
 #include "auction-cpp/AuctionSolver.hpp"
 #include <experimental/filesystem>
 
-#define REW_MAT_BUF_SIZE 0x10000
+#define REW_MAT_BUF_SIZE 0x1000000
 
 double sc_time_stamp() {
     return 0;
 }
 
+uint64_t rew_mat_aligned[REW_MAT_BUF_SIZE];
 
-bool run_Auction(WrapperRegDriver * platform, std::vector<std::vector<int>> reward_mat) {
+
+bool run_Auction(WrapperRegDriver * platform, int n_rows, int n_cols, int size) {
+
   Auction t(platform);
 
   // 1. Calculate result in SW
-  auto start = high_resolution_clock::now();
-  auto object_assignments = auction(reward_mat, 1);
-  auto stop= high_resolution_clock::now();
-  auto sw_duration = duration_cast<nanoseconds>(stop-start);
-
-
-  uint64_t rew_mat_aligned[REW_MAT_BUF_SIZE];
-  int size = allocate_reward(reward_mat, (uint64_t *) &rew_mat_aligned);
-
-
-  int n_rows = reward_mat.size();
-  int n_cols = reward_mat[0].size();
 
   bool print_rew_mat = false;
   if (print_rew_mat) {
@@ -65,11 +56,13 @@ bool run_Auction(WrapperRegDriver * platform, std::vector<std::vector<int>> rewa
 
   while (t.get_rfOut_finished() != 1);
   cout <<"Cycles=" <<t.get_rfOut_cycleCount() <<endl;
-  cout <<"SW=" <<sw_duration.count() <<" ns" <<endl;
+  cout <<"Iter=" <<t.get_rfOut_iterCount() <<endl;
+  cout <<"Misses=" <<t.get_rfOut_missCount() <<endl;
   platform->copyBufferAccelToHost(accelResBuf, res, bufsize_res);
 
   // Verify that object assignment matches
   bool valid = true;
+/*
   for (int i = 0; i<n_cols; i++) {
     if(res[i] != object_assignments[i]) {
       if (res[i] != 0 && object_assignments[i] != -1) {
@@ -81,15 +74,14 @@ bool run_Auction(WrapperRegDriver * platform, std::vector<std::vector<int>> rewa
     }
   }
 
-
   if (valid == false) {
     // Check if the gain is the same and thus we have equally valid solution
     std::vector<int> obj_ass_hw;
     for (int i = 0; i<n_cols; i++) {
         obj_ass_hw.push_back(res[i]);
     }
-    int gainHW = calc_gain(reward_mat, obj_ass_hw);
-    int gainSW = calc_gain(reward_mat, object_assignments);
+    int gainHW = calc_gain(rew, obj_ass_hw);
+    int gainSW = calc_gain(rew, object_assignments);
 
     if (gainHW != gainSW) {
        cout <<"ERROR: Also mismatch gain. gainHW=" <<gainHW <<" gainSW=" <<gainSW <<endl;
@@ -115,6 +107,7 @@ bool run_Auction(WrapperRegDriver * platform, std::vector<std::vector<int>> rewa
 
 
   }
+*/
   platform->deallocAccelBuffer(accelBuf);
   platform->deallocAccelBuffer(accelResBuf);
 
@@ -124,57 +117,35 @@ bool run_Auction(WrapperRegDriver * platform, std::vector<std::vector<int>> rewa
 int main(int argc, char** argv)
 {
     cout <<"Running Auction Accelerator" <<endl;
+
+    if (argc != 2) {
+        cout << "Expects 1 argument with path to folder with datasets" <<endl;
+        return -1;
+    }
+
+    string path = argv[1];
+
     int epsilon = 1;
 
-     string path = "auction-cpp/resources/rewardsNew";
       for (const auto & entry : experimental::filesystem::directory_iterator(path)) {
         auto p = string(entry.path().string());
        // if (p == "auction-cpp/resources/rewardsNew/new_rewards11749.csv") {
         auto rew = parse_csv(p);
-        if (rew.size() == 0) {
-            continue;
-        }
-        cout <<p <<endl <<" rows=" <<rew.size() <<" cols=" <<rew[0].size() <<endl;
-        WrapperRegDriver * platform = initPlatform();
-        if (!run_Auction(platform, rew)) {
-          return 1;
-        }
-        //}
-    }
+        auto object_assignments = auction(rew, 1);
 
-    return 0;
-
-     path = "auction-cpp/resources/test_problems8bit";
-      for (const auto & entry : experimental::filesystem::directory_iterator(path)) {
-        auto p = string(entry.path().string());
-        auto rew = parse_csv(p);
+        int size = allocate_reward(rew, (uint64_t *) &rew_mat_aligned);
         if (rew.size() == 0) {
             continue;
         }
 
-        cout <<p <<endl <<" rows=" <<rew.size() <<" cols=" <<rew[0].size() <<endl;
+        int n_rows = rew.size();
+        int n_cols = rew[0].size();
+
+        cout <<p <<endl <<" rows=" <<n_rows <<" cols=" <<n_cols <<endl;
         WrapperRegDriver * platform = initPlatform();
-        if (!run_Auction(platform, rew)) {
+        if (!run_Auction(platform, n_rows, n_cols, size)) {
           return 1;
         }
     }
-
-    return 0;
-
-    path = "auction-cpp/resources/test_problemsfc8bit";
-    for (const auto & entry : experimental::filesystem::directory_iterator(path)) {
-
-      auto p = string(entry.path().string());
-//      if (p == "auction-cpp/resources/test_problems8bit/rewards1828.csv") {
-        auto rew = parse_csv(p);
-        cout <<p <<endl <<" rows=" <<rew.size() <<" cols=" <<rew[0].size() <<endl;
-        WrapperRegDriver * platform = initPlatform();
-        if (!run_Auction(platform, rew)) {
-          return 1;
-        }
-        deinitPlatform(platform);
-//      }
-    }
-
     return 0;
 }
