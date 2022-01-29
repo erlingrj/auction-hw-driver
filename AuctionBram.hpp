@@ -1,6 +1,6 @@
 
-#ifndef Auction_H
-#define Auction_H
+#ifndef AuctionBram_H
+#define AuctionBram_H
 #include "wrapperregdriver.h"
 #include <map>
 #include <string>
@@ -10,16 +10,16 @@
 
 
 using namespace std;
-class Auction {
+class AuctionBram {
 public:
-  Auction(WrapperRegDriver * platform) {
+  AuctionBram(WrapperRegDriver * platform) {
     m_platform = platform;
     attach();
-    if(readReg(0) != 0x1159cc0f)  {
+    if(readReg(0) != 0xc9d60d0a)  {
       throw "Unexpected accelerator signature, is the correct bitfile loaded?";
     }
   }
-  ~Auction() {
+  ~AuctionBram() {
     detach();
   }
 
@@ -28,15 +28,13 @@ public:
   void set_rfIn_nAgents(AccelReg value) {writeReg(4, value);} 
   void set_rfIn_baseAddr(AccelDblReg value) { writeReg(5, (AccelReg)(value >> 32)); writeReg(6, (AccelReg)(value & 0xffffffff)); }
   void set_rfIn_start(AccelReg value) {writeReg(7, value);} 
-  AccelReg get_rfOut_iterCount() {return readReg(8);} 
-  AccelReg get_rfOut_missCount() {return readReg(9);} 
-  AccelReg get_rfOut_cycleCount() {return readReg(10);} 
-  AccelReg get_rfOut_finished() {return readReg(11);} 
+  AccelReg get_rfOut_cycleCount() {return readReg(8);} 
+  AccelReg get_rfOut_finished() {return readReg(9);} 
   AccelReg get_signature() {return readReg(0);} 
 
 
   map<string, vector<unsigned int>> getStatusRegs() {
-    map<string, vector<unsigned int>> ret = { {"rfOut_iterCount", {8}} ,  {"rfOut_missCount", {9}} ,  {"rfOut_cycleCount", {10}} ,  {"rfOut_finished", {11}} ,  {"signature", {0}} };
+    map<string, vector<unsigned int>> ret = { {"rfOut_cycleCount", {8}} ,  {"rfOut_finished", {9}} ,  {"signature", {0}} };
     return ret;
   }
 
@@ -50,7 +48,7 @@ protected:
   WrapperRegDriver * m_platform;
   AccelReg readReg(unsigned int i) {return m_platform->readReg(i);}
   void writeReg(unsigned int i, AccelReg v) {m_platform->writeReg(i,v);}
-  void attach() {m_platform->attach("Auction");}
+  void attach() {m_platform->attach("AuctionBram");}
   void detach() {m_platform->detach();}
 };
 #endif
